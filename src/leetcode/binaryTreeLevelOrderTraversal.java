@@ -18,6 +18,10 @@ return its level order traversal as:
   [9,20],
   [15,7]
 ]
+
+Takeaways:
+- You can get elements by index in ArrayList.
+- ArrayList maintains insert order.
  */
 import java.util.*;
 
@@ -29,35 +33,25 @@ public class binaryTreeLevelOrderTraversal {
 
     So for our given list, we will call the method with root and int level = 0
     If root == null return;
-    Else recursive call on root.left and root.right, with level + 1
+    Else add root.val to correct list and recursively call on root.left and root.right, with level + 1
+
+    Time: O(n) where n = number of nodes in binary tree.
+    Space: O(n) stored in the result list.
     */
     public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> results = new ArrayList<>();
-        HashMap<Integer, List<Integer>> nodesPerLevel = new HashMap<Integer, List<Integer>>();
-        if(root == null)
-            return results;
-
-        dfs(root, 0, nodesPerLevel);
-
-        results.addAll(nodesPerLevel.values());
-        return results;
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        levelHelper(res, root, 0);
+        return res;
     }
 
-    private void dfs(TreeNode root, int level, HashMap<Integer, List<Integer>> nodesPerLevel){
-        if(root == null)
-            return;
-        if(nodesPerLevel.containsKey(level)){
-            List<Integer> updatedList = nodesPerLevel.get(level);
-            updatedList.add(root.val);
-            nodesPerLevel.put(level, updatedList);
-        } else{
-            List<Integer> newList = new ArrayList<>();
-            newList.add(root.val);
-            nodesPerLevel.put(level, newList);
+    public void levelHelper(List<List<Integer>> res, TreeNode root, int height) {
+        if (root == null) return;
+        if (height >= res.size()) {
+            res.add(new LinkedList<Integer>());
         }
-
-        dfs(root.left, level + 1, nodesPerLevel);
-        dfs(root.right, level + 1, nodesPerLevel);
+        res.get(height).add(root.val);
+        levelHelper(res, root.left, height+1);
+        levelHelper(res, root.right, height+1);
     }
 
     public class TreeNode {
